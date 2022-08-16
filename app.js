@@ -3,8 +3,10 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+const connectToMongoDB = require('./services/db_connection');
 const app = express();
 
+connectToMongoDB();
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
