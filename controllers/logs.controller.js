@@ -1,9 +1,9 @@
 'use strinct';
 
-class MainController {
+class LogsController {
 
 	all(req, res, next) {
-		res.json({ message: 'Esssxample request.' });
+		res.json({ message: 'Essssssadsauest.' });
 	}
 
 	create(req, res, next) {
@@ -23,4 +23,4 @@ class MainController {
 	}
 }
 
-module.exports = new MainController();
+module.exports = new LogsController();
