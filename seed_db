@@ -1,0 +1,65 @@
+const Authorizations = require('./models/authorizations.model');
+const Applications = require('./models/applications.model');
+const Logs = require('./models/logs.model');
+const connectToMongoDB = require('./services/db_connection');
+
+
+const seed = async () => {
+    try {
+        console.log('connecting to database...');
+        await connectToMongoDB();
+        console.log('cleaning database...');
+        await Authorizations.deleteMany({});
+        await Applications.deleteMany({});
+        await Logs.deleteMany({});
+        await Applications.create({ name: 'envia.com' });
+        await Applications.create({ name: 'ecart.com' });
+        await Authorizations.create({
+            application_id: Applications.findOne({ name: 'envia.com' })._id,
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6InNlY3JldDEyMyJ9.eyJ1c2VyIjoiamVzdXMgb2Nob2EgcmFiZWxvIiwicmVhc29uIjoibmVlZCB0aGUgam9iIn0.dHW2r-cakhppV-4SbwVEv0qvxzG2576CpAwTTmVpt78'
+        }).then(() => {
+            console.log('Authorizations seeded');
+        });
+        await Logs.create({
+            application_id: Applications.findOne({ name: 'envia.com' })._id,
+            type: 'info',
+            priority: 'low',
+            path: 'api/v1/authorizations',
+            message: 'user successfully authorized',
+            request: {},
+            response: {}
+        }).then(() => {
+            console.log('First log seeded');
+        });
+        await Logs.create({
+            application_id: Applications.findOne({ name: 'ecart.com' })._id,
+            type: "info",
+            priority: "low",
+            path: "/services/mailSender.js",
+            message: "The file attachment exceed the maximum permitted",
+            request: {
+                action: "send email",
+                service: "mailSender.js",
+                execute_time: "12s",
+                email_info: {
+                    emails: [
+                        "test@test.com", "test2@test.com"
+                    ],
+                    "remitent_emails": ["remitent@test.com"]
+                }
+            },
+            response: {
+                "smtp_service": "locked",
+                "time_remaining": 34
+            }
+        }).then(() => {
+            console.log('Last log seeded');
+        });
+
+    } catch (err) {
+        console.log(err);
+    }
+    coonsoole.log('seed complete');
+}
+
+seed();
