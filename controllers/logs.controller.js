@@ -51,17 +51,9 @@ class LogsController {
                 if (err) {
                     return next(err)
                 }
-                const { _id, type, priority, message, createdAt } = log;
                 res.json({
-                    _id,
-                    application: {
-                        _id: application._id,
-                        name: application.name
-                    },
-                    type,
-                    priority,
-                    message,
-                    createdAt,
+                    log: log,
+                    application: application
                 })
             }
             );
