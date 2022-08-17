@@ -13,6 +13,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/api', validateToken, require('./routes/applications.routes'));
 app.use('/api', validateToken, require('./routes/logs.routes'));
 app.use('/api', validateToken, require('./routes/main.routes'));
 
